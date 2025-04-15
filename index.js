@@ -6,7 +6,7 @@ const axios = require('axios'); // For API calls
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        headless: false,  // Change this from true to false
+        headless: true,  // Change this from true to false
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     },
 });
