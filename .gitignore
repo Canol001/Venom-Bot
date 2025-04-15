@@ -6,3 +6,6 @@ node_modules/
 
 # Ignore .wwebjs_cache directory
 .wwebjs_cache/
+"node_modules/" 
+".wwebjs_auth/" 
+".wwebjs_cache/" 
