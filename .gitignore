@@ -1,2 +1,8 @@
-node_modules
-session
+# Ignore node_modules
+node_modules/
+
+# Ignore .wwebjs_auth directory
+.wwebjs_auth/
+
+# Ignore .wwebjs_cache directory
+.wwebjs_cache/
