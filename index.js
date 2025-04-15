@@ -1,8 +1,19 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
+// const qrcode = require('qrcode-terminal');
 const { MessageMedia } = require('whatsapp-web.js');
 const axios = require('axios');
 const fs = require('fs');
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const qrcode = require('qrcode')
+
+// Initialize Express server
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+app.use(express.static('public'));
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -17,15 +28,31 @@ const client = new Client({
 // Store bot's own WhatsApp ID
 let botId = null;
 
-client.on('qr', (qr) => {
-    qrcode.generate(qr, { small: true });
-    console.log('📱 Scan the QR code above to log in.');
+// client.on('qr', (qr) => {
+//     qrcode.generate(qr, { small: true });
+//     console.log('📱 Scan the QR code above to log in.');
+// });
+
+// client.on('ready', () => {
+//     console.log('✅ Bot is online and vibing! 🔥');
+//     botId = client.info.wid._serialized;
+//     console.log(`Bot ID: ${botId}`);
+// });
+
+client.on('qr', async (qr) => {
+    console.log('QR RECEIVED');
+    const qrDataUrl = await qrcode.toDataURL(qr);
+    io.emit('qr', qrDataUrl);
 });
 
 client.on('ready', () => {
-    console.log('✅ Bot is online and vibing! 🔥');
-    botId = client.info.wid._serialized;
-    console.log(`Bot ID: ${botId}`);
+    console.log('Client is ready!');
+    io.emit('ready', '✅ Client is ready!');
+});
+
+client.on('authenticated', () => {
+    console.log('Client is authenticated!');
+    io.emit('authenticated', '🔐 Client is authenticated!');
 });
 
 // Function to send a random emoji reaction
@@ -845,3 +872,14 @@ o. \`poll-result\` - View poll results
 });
 
 client.initialize();
+
+// Serve the web page
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+// Start server on Render's expected port
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

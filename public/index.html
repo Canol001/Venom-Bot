@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>vBot QR Code</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body style="text-align: center; padding: 2rem; font-family: sans-serif;">
+  <h1>Scan the QR to connect WhatsApp 🤳</h1>
+  <div id="status">Waiting for QR code...</div>
+  <img id="qr" src="" style="width: 300px; margin-top: 20px;">
+  <script>
+    const socket = io();
+    const qrImg = document.getElementById('qr');
+    const status = document.getElementById('status');
+
+    socket.on('qr', (src) => {
+      qrImg.src = src;
+      status.innerText = '📷 Scan this QR with your Bot!';
+    });
+
+    socket.on('ready', (msg) => {
+      status.innerText = msg;
+      qrImg.src = '';
+    });
+
+    socket.on('authenticated', (msg) => {
+      status.innerText = msg;
+      qrImg.src = '';
+    });
+  </script>
+</body>
+</html>
