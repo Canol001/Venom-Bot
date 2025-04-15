@@ -6,10 +6,11 @@ const axios = require('axios'); // For API calls
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        headless: true,  // Change this from true to false
+        headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     },
 });
+
 client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
     console.log('📱 Scan the QR code above to log in.');
