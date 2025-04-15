@@ -14,7 +14,7 @@ const client = new Client({
 client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
     console.log('📱 Scan the QR code above to log in.');
-});
+})
 
 client.on('ready', () => {
     console.log('✅ Bot is online and vibing! 🔥');
